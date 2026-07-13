@@ -77,7 +77,7 @@ export default function Navbar() {
 
           {/* Login Button */}
           <Link
-            href="/login"
+            href="/auth/login"
             className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-500 hover:bg-amber-500/20 transition-colors"
           >
             <LogIn className="h-4 w-4" />
