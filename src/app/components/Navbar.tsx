@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; 
-import { ShoppingCart, Utensils, LogIn, LogOut, Menu, X } from "lucide-react"; 
+import { ShoppingCart, Utensils, LogIn, LogOut, Menu, X, LayoutDashboard } from "lucide-react"; 
 import { signOut, useSession } from "../lib/auth-client";
 import { User } from "../lib/session/session";
 import Image from "next/image";
@@ -14,13 +14,15 @@ interface MenuItem {
   label: string;
   icon?: React.ReactNode; 
   href: string;
+  allowedRoles?: string[];
 }
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname(); 
   const { data: session, isPending } = useSession();
-  const user: User | undefined = session?.user as User | undefined;
+  const user = (session?.user ? session.user : session) as User | undefined;
+  const userRole = user?.role?.toLowerCase();
 
   const handleSignout = async () => {
     await signOut();
@@ -34,8 +36,19 @@ export default function Navbar() {
   const menuItems: MenuItem[] = [
     { label: "Home", href: "/" },
     { label: "Menu", href: "/menu" },
+    { 
+      label: "Dashboard", 
+      href: "/dashboard", 
+      icon: <LayoutDashboard className="h-5 w-5" />, 
+      allowedRoles: ["admin", "moderator"] 
+    },
     { label: "Cart", icon: <ShoppingCart className="h-5 w-5" />, href: "/cart" }
   ];
+
+  const visibleMenuItems = menuItems.filter((item) => {
+    if (!item.allowedRoles) return true; 
+    return userRole && item.allowedRoles.includes(userRole); 
+  });
 
   return (
     <header 
@@ -56,7 +69,6 @@ export default function Navbar() {
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
 
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold">
             <Utensils className="h-6 w-6 text-amber-500" />
             <span className="text-xl font-extrabold tracking-wide text-white">
@@ -65,15 +77,14 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Desktop Links + Cart Icon */}
         <nav className="hidden sm:flex items-center space-x-8" aria-label="Desktop navigation">
-          {menuItems.map((item) => {
+          {visibleMenuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link 
                 key={item.label} 
                 href={item.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium transition-colors flex items-center gap-1.5 ${
                   isActive ? "text-amber-500" : "text-gray-300 hover:text-amber-500"
                 }`}
               >
@@ -83,9 +94,8 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right: Mobile Cart & Login/Logout Action */}
+        {/* Right Side Actions */}
         <div className="flex items-center gap-4">
-          {/* Mobile Cart */}
           <Link
             href="/cart"
             className={`relative rounded-full p-2 transition-colors sm:hidden ${
@@ -96,7 +106,6 @@ export default function Navbar() {
             <ShoppingCart className="h-6 w-6" />
           </Link>
 
-          {/* Auth State Handling */}
           {isPending ? (
             <div className="w-8 h-8 rounded-full bg-zinc-800 animate-pulse" />
           ) : user ? (
@@ -108,7 +117,6 @@ export default function Navbar() {
                 width={35} 
                 height={35}
               />
-             
               <Button
                 onClick={handleSignout}
                 className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer min-w-0 h-auto"
@@ -133,7 +141,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Responsive Menu */}
       {isMenuOpen && (
         <nav 
           className="sm:hidden border-t border-gray-800 px-4 py-3 shadow-xl" 
@@ -141,7 +148,7 @@ export default function Navbar() {
           aria-label="Mobile navigation"
         >
           <ul className="space-y-3">
-            {menuItems.map((item) => {
+            {visibleMenuItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <li key={item.label}>
