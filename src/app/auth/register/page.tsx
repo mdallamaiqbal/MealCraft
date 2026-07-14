@@ -50,6 +50,7 @@ export default function RegisterPage(): React.JSX.Element {
         setPhotoUrl("");
         setPassword("");
         setWasSubmitted(false);
+        window.location.href = "/";
       }
     } catch (err) {
       console.error("Auth process tracking exception logging:", err);

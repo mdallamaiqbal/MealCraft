@@ -6,6 +6,7 @@ import { Card, CardHeader, Input, Button } from "@heroui/react";
 import { Mail, Lock, Eye, EyeOff, Utensils, LogIn } from "lucide-react";
 import { authClient } from "@/app/lib/auth-client";
 
+
 export default function LoginPage(): React.JSX.Element {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -34,7 +35,7 @@ export default function LoginPage(): React.JSX.Element {
         email: email.toLowerCase().trim(),
         password: password,
       });
-
+        
       if (error) {
         setServerError(error.message || "Invalid email or password.");
       } else {
@@ -42,6 +43,7 @@ export default function LoginPage(): React.JSX.Element {
         setEmail("");
         setPassword("");
         setWasSubmitted(false);
+        window.location.href = "/";
       }
     } catch (err) {
       console.error("Auth login operation trace failure:", err);
