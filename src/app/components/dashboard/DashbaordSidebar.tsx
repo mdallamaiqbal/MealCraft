@@ -25,9 +25,9 @@ export async function DashboardSidebar() {
     }
 
     const navLinksMap: NavItem[] = [
-        { icon: Users, href: "/dashboard", label: "Profile Management" },
+        { icon: Users, href: "/dashboard", label: "Welcome" },
         { icon: Image, href: "/dashboard/addFood", label: "Add Foods" },
-        { icon: History, href: "/dashboard/user/purchaseHistory", label: "Purchase History" }
+        
     ];
 
     const navContents = (
