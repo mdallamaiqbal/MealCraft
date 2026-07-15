@@ -136,7 +136,7 @@ export default function FoodSubmissionForm() {
         try {
             await addFood(foodData);
             alert("Food item added successfully!");
-            router.push('/dashboard/foods'); 
+            router.push('/menu'); 
             handleReset();
         } catch (error) {
             console.error("Submission failed:", error);

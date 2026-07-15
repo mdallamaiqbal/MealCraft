@@ -15,12 +15,3 @@ export const addFood = async (newFoodData: FoodInput) => {
 };
 
 
- 
-
-//const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-// export const getArtById = async (id) => {
-//     const res = await fetch(`${baseUrl}/api/arts/${id}`, {
-//         method: 'GET'
-//     });
-//     return res.json();
-// };
