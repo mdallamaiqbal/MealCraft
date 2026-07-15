@@ -1,8 +1,8 @@
 
 import React from "react";
+
 import { FoodItem, getAllFood } from "../lib/getFood";
 import Link from "next/link";
-
 
 export default async function MenuPage() {
 
